@@ -1,0 +1,27 @@
+{
+    "name": "matmar10/camp-bx",
+    "description": "REST API Client for CampBX Bitcoin exchange using Guzzle library",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/matmar10/lib-money"
+        }
+    ],
+    "require": {
+        "guzzle/guzzle": "~3.7",
+        "matmar10/lib-money": "dev-master"
+    },
+    "license": "Apache License Version 2.0",
+    "authors": [
+        {
+            "name": "Matthew J. Martin",
+            "email": "matthew.mar10@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-0": {
+            "Matmar10\\": "src/"
+        }
+    },
+    "target-dir": "Matmar10/CampBX"
+}

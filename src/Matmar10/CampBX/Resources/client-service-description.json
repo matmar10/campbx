@@ -1,0 +1,83 @@
+{
+    "name": "CampBX",
+    "apiVersion": "1",
+    "baseUrl": "http://testnet.campbx.com/api",
+    "operations": {
+        "GetMarketDepth": {
+            "httpMethod": "GET",
+            "responseClass": "GetMarketDepth",
+            "uri": "xdepth.php"
+        },
+        "GetTicker": {
+            "httpMethod": "GET",
+            "responseClass": "GetTicker",
+            "uri": "xticker.php"
+        }
+    },
+    "models": {
+        "GetMarketDepth": {
+            "type": "object",
+            "properties": {
+                "statusCode": {
+                    "location": "statusCode",
+                    "type": "integer"
+                },
+                "asks": {
+                    "location": "json",
+                    "sentAs": "Asks",
+                    "filters": [
+                        {
+                            "method": "Matmar10\\CampBX\\Filter\\Response::convertMarketDepth",
+                            "args": [ "@value" ]
+                        }
+                    ]
+                },
+                "bids": {
+                    "location": "json",
+                    "sentAs": "Bids",
+                    "filters": [{
+                        "method": "Matmar10\\CampBX\\Filter\\Response::convertMarketDepth",
+                        "args": [ "@value" ]
+                    }]
+                }
+            }
+        },
+        "GetTicker": {
+            "type": "object",
+            "properties": {
+                "statusCode": {
+                    "location": "statusCode",
+                    "type": "integer"
+                },
+                "lastTrade": {
+                    "location": "json",
+                    "sentAs": "Last Trade",
+                    "type": "object",
+                    "filters": [{
+                        "method": "Matmar10\\CampBX\\Filter\\Response::asCurrencyPairFromFloat",
+                        "args": [ "@value", "BTC", 8, 8, "USD", 2, 2, "B⃦", "$"]
+                    }]
+                },
+                "bid": {
+                    "location": "json",
+                    "sentAs": "Best Bid",
+                    "type": "object",
+                    "filters": [{
+                        "method": "Matmar10\\CampBX\\Filter\\Response::asCurrencyPairFromFloat",
+                        "args": [ "@value", "BTC", 8, 8, "USD", 2, 2, "B⃦", "$"]
+                    }]
+                },
+                "ask": {
+                    "location": "json",
+                    "sentAs": "Best Ask",
+                    "type": "object",
+                    "filters": [{
+                        "method": "Matmar10\\CampBX\\Filter\\Response::asCurrencyPairFromFloat",
+                        "args": [ "@value", "BTC", 8, 8, "USD", 2, 2, "B⃦", "$"]
+                    }]
+                }
+            }
+        }
+    }
+
+}
