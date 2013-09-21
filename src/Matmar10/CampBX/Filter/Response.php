@@ -2,6 +2,7 @@
 
 namespace Matmar10\CampBX\Filter;
 
+use Matmar10\Campbx\Resource\MarketDepthPrice;
 use Matmar10\Money\Entity\Currency;
 use Matmar10\Money\Entity\CurrencyPair;
 use Matmar10\Money\Entity\Money;
@@ -13,7 +14,8 @@ class Response
         $marketDepth = array();
         foreach($input as $depthData) {
             list($price, $ordersValue) = $depthData;
-            $marketDepth[$price] = $ordersValue;
+            $marketDepthPrice = new MarketDepthPrice((float)$price, (float)$ordersValue);
+            array_push($marketDepth, $marketDepthPrice);
         }
         return $marketDepth;
     }

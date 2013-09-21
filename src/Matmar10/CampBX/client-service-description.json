@@ -1,0 +1,155 @@
+{
+    "name": "CampBX",
+    "description": "REST API for the CampBX Bitcoin USD currency exchange based in the USA",
+    "apiVersion": "1",
+    "baseUrl": "https://campbx.com/api",
+    "operations": {
+        "GetMarketDepth": {
+            "summary": "Provides information on the market depth of the current order book",
+            "httpMethod": "GET",
+            "responseClass": "GetMarketDepth",
+            "uri": "xdepth.php"
+        },
+        "GetTicker": {
+            "summary": "Provides a high-level summary of the current bid/ask along with the last trade posted",
+            "httpMethod": "GET",
+            "responseClass": "GetTicker",
+            "uri": "xticker.php"
+        },
+        "GetAccountBalances": {
+            "summary": "Bbtain latest account balances of your account (requires username/password and API access enabled)",
+            "httpMethod": "POST",
+            "uri": "myfunds.php",
+            "responseClass": "GetAccountBalances",
+            "class": "Matmar10\\CampBX\\Command\\AuthenticatedCommand"
+        }
+    },
+    "models": {
+        "GetMarketDepth": {
+            "type": "object",
+            "properties": {
+                "statusCode": {
+                    "location": "statusCode",
+                    "type": "integer"
+                },
+                "bid": {
+                    "location": "json",
+                    "sentAs": "Bids",
+                    "filters": [{
+                        "method": "Matmar10\\CampBX\\Filter\\Response::convertMarketDepth",
+                        "args": [ "@value" ]
+                    }]
+                },
+                "ask": {
+                    "location": "json",
+                    "sentAs": "Asks",
+                    "filters": [
+                        {
+                            "method": "Matmar10\\CampBX\\Filter\\Response::convertMarketDepth",
+                            "args": [ "@value" ]
+                        }
+                    ]
+                }
+            }
+        },
+        "GetTicker": {
+            "type": "object",
+            "properties": {
+                "statusCode": {
+                    "location": "statusCode",
+                    "type": "integer"
+                },
+                "lastTrade": {
+                    "location": "json",
+                    "sentAs": "Last Trade",
+                    "type": "object",
+                    "filters": [{
+                        "method": "Matmar10\\CampBX\\Filter\\Response::asCurrencyPairFromFloat",
+                        "args": [ "@value", "BTC", 8, 8, "USD", 2, 2, "B⃦", "$"]
+                    }]
+                },
+                "bid": {
+                    "location": "json",
+                    "sentAs": "Best Bid",
+                    "type": "object",
+                    "filters": [{
+                        "method": "Matmar10\\CampBX\\Filter\\Response::asCurrencyPairFromFloat",
+                        "args": [ "@value", "BTC", 8, 8, "USD", 2, 2, "B⃦", "$"]
+                    }]
+                },
+                "ask": {
+                    "location": "json",
+                    "sentAs": "Best Ask",
+                    "type": "object",
+                    "filters": [{
+                        "method": "Matmar10\\CampBX\\Filter\\Response::asCurrencyPairFromFloat",
+                        "args": [ "@value", "BTC", 8, 8, "USD", 2, 2, "B⃦", "$"]
+                    }]
+                }
+            }
+        },
+        "GetAccountBalances": {
+            "type": "object",
+            "properties": {
+                "statusCode": {
+                    "location": "statusCode",
+                    "type": "integer"
+                },
+                "totalUSD": {
+                    "location": "json",
+                    "sentAs": "Total USD",
+                    "type": "object",
+                    "filters": [{
+                        "method": "Matmar10\\CampBX\\Filter\\Response::asMoneyFromFloat",
+                        "args": [ "@value", "USD", 2, 2, "$" ]
+                    }]
+                },
+                "totalBTC": {
+                    "location": "json",
+                    "sentAs": "Total BTC",
+                    "type": "object",
+                    "filters": [{
+                        "method": "Matmar10\\CampBX\\Filter\\Response::asMoneyFromFloat",
+                        "args": [ "@value", "BTC", 8, 8, "B⃦" ]
+                    }]
+                },
+                "liquidUSD": {
+                    "location": "json",
+                    "sentAs": "Liquid USD",
+                    "type": "object",
+                    "filters": [{
+                        "method": "Matmar10\\CampBX\\Filter\\Response::asMoneyFromFloat",
+                        "args": [ "@value", "USD", 2, 2, "$" ]
+                    }]
+                },
+                "liquidBTC": {
+                    "location": "json",
+                    "sentAs": "Liquid BTC",
+                    "type": "object",
+                    "filters": [{
+                        "method": "Matmar10\\CampBX\\Filter\\Response::asMoneyFromFloat",
+                        "args": [ "@value", "BTC", 8, 8, "B⃦" ]
+                    }]
+                },
+                "marginUSD": {
+                    "location": "json",
+                    "sentAs": "Margin Account USD",
+                    "type": "object",
+                    "filters": [{
+                        "method": "Matmar10\\CampBX\\Filter\\Response::asMoneyFromFloat",
+                        "args": [ "@value", "USD", 2, 2, "$" ]
+                    }]
+                },
+                "marginBTC": {
+                    "location": "json",
+                    "sentAs": "Margin Account BTC",
+                    "type": "object",
+                    "filters": [{
+                        "method": "Matmar10\\CampBX\\Filter\\Response::asMoneyFromFloat",
+                        "args": [ "@value", "BTC", 8, 8, "B⃦" ]
+                    }]
+                }
+            }
+        }
+    }
+}
