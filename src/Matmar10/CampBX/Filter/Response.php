@@ -2,7 +2,10 @@
 
 namespace Matmar10\CampBX\Filter;
 
+use DateTime;
+use DateTimeZone;
 use Matmar10\Campbx\Resource\MarketDepthPrice;
+use Matmar10\Campbx\Resource\ResourceProxy;
 use Matmar10\Money\Entity\Currency;
 use Matmar10\Money\Entity\CurrencyPair;
 use Matmar10\Money\Entity\Money;
@@ -34,7 +37,6 @@ class Response
         return $amount;
     }
 
-
     public static function asCurrencyPairFromFloat(
         $input,
         $fromCurrencyCode,
@@ -51,5 +53,43 @@ class Response
         $toCurrency = new Currency($toCurrencyCode, $toCurrencyCalculationPrecision, $toCurrencyDisplayPrecision, $toCurrencySymbol);
         $pair = new CurrencyPair($fromCurrency, $toCurrency, (float)$input);
         return $pair;
+    }
+
+    public static function marshalStringToDateTime($input, $timezone)
+    {
+        return new DateTime($input, new DateTimeZone($timezone));
+    }
+
+    public static function marshalMarginPercent($input)
+    {
+        if('None' === $input) {
+            return 0;
+        }
+
+        return (float)$input;
+    }
+
+    public static function parseBoolean($input)
+    {
+        if('No' === $input) {
+            return false;
+        }
+        return true;
+    }
+
+    public static function marshalResourceProxy($input)
+    {
+        return new ResourceProxy($input, array_keys($input));
+    }
+
+    public static function normalizeOrdersListEmptyArray($input)
+    {
+        if(1 === count($input)) {
+            $firstElement = reset($input);
+            if(false !== array_key_exists('Info', $firstElement)) {
+                return array();
+            }
+        }
+        return $input;
     }
 }

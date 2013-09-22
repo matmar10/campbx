@@ -17,10 +17,17 @@
             "uri": "xticker.php"
         },
         "GetAccountBalances": {
-            "summary": "Bbtain latest account balances of your account (requires username/password and API access enabled)",
+            "summary": "Obtain latest account balances of your account (requires username/password and API access enabled)",
             "httpMethod": "POST",
             "uri": "myfunds.php",
             "responseClass": "GetAccountBalances",
+            "class": "Matmar10\\CampBX\\Command\\AuthenticatedCommand"
+        },
+        "GetOrdersList": {
+            "summary": "Get your list of open orders",
+            "httpMethod": "POST",
+            "uri": "myorders.php",
+            "responseClass": "GetOrdersList",
             "class": "Matmar10\\CampBX\\Command\\AuthenticatedCommand"
         }
     },
@@ -87,10 +94,6 @@
         "GetAccountBalances": {
             "type": "object",
             "properties": {
-                "statusCode": {
-                    "location": "statusCode",
-                    "type": "integer"
-                },
                 "totalUSD": {
                     "location": "json",
                     "sentAs": "Total USD",
@@ -144,6 +147,181 @@
                         "method": "Matmar10\\CampBX\\Filter\\Response::asMoneyFromFloat",
                         "args": [ "@value", "BTC", 8, 8, "B⃦" ]
                     }]
+                }
+            }
+        },
+        "GetOrdersList": {
+            "type": "object",
+            "properties": {
+                "bid": {
+                    "location": "json",
+                    "sentAs": "Buy",
+                    "type": "array",
+                    "filters": [{
+                        "method": "Matmar10\\CampBX\\Filter\\Response::normalizeOrdersListEmptyArray",
+                        "args": [ "@value" ]
+                    }],
+                    "items": {
+                        "type": "object",
+                        "filters": [
+                            {
+                                "method": "Matmar10\\CampBX\\Filter\\Response::marshalResourceProxy",
+                                "args": [ "@value" ]
+                            }
+                        ],
+                        "properties": {
+                            "entered": {
+                                "sentAs": "Order Entered",
+                                "type": "object",
+                                "filters": [{
+                                    "method": "Matmar10\\CampBX\\Filter\\Response::marshalStringToDateTime",
+                                    "args": [ "@value", "America/New_York" ]
+                                }]
+                            },
+                            "expires": {
+                                "sentAs": "Order Expiry",
+                                "type": "object",
+                                "filters": [{
+                                    "method": "Matmar10\\CampBX\\Filter\\Response::marshalStringToDateTime",
+                                    "args": [ "@value", "America/New_York" ]
+                                }]
+                            },
+                            "type": {
+                                "sentAs": "Order Type",
+                                "type": "string"
+                            },
+                            "marginPercent": {
+                                "sentAs": "Margin Percent",
+                                "type": "boolean",
+                                "filters": [{
+                                    "method": "Matmar10\\CampBX\\Filter\\Response::marshalMarginPercent",
+                                    "args": [ "@value" ]
+                                }]
+                            },
+                            "quantity": {
+                                "sentAs": "Quantity",
+                                "type": "\\Matmar10\\Money\\Entity\\Money",
+                                "filters": [{
+                                    "method": "Matmar10\\CampBX\\Filter\\Response::asMoneyFromFloat",
+                                    "args": [ "@value", "BTC", 8, 8, "B⃦" ]
+                                }]
+                            },
+                            "price": {
+                                "sentAs": "Price",
+                                "type": "\\Matmar10\\Money\\Entity\\CurrencyPair",
+                                "filters": [{
+                                    "method": "Matmar10\\CampBX\\Filter\\Response::asCurrencyPairFromFloat",
+                                    "args": [ "@value", "BTC", 8, 8, "USD", 2, 2, "B⃦", "$" ]
+                                }]
+                            },
+                            "stopLoss": {
+                                "sentAs": "Stop-loss",
+                                "type": "boolean",
+                                "filters": [{
+                                    "method": "Matmar10\\CampBX\\Filter\\Response::parseBoolean",
+                                    "args": [ "@value"  ]
+                                }]
+                            },
+                            "fillType": {
+                                "sentAs": "Fill Type",
+                                "type": "string"
+                            },
+                            "darkPool": {
+                                "sentAs": "Dark Pool",
+                                "type": "boolean",
+                                "filters": [{
+                                    "method": "Matmar10\\CampBX\\Filter\\Response::parseBoolean",
+                                    "args": [ "@value"  ]
+                                }]
+                            },
+                            "orderId": {
+                                "sentAs": "Order ID",
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "ask": {
+                    "location": "json",
+                    "sentAs": "Sell",
+                    "type": "array",
+                    "filters": [{
+                        "method": "Matmar10\\CampBX\\Filter\\Response::normalizeOrdersListEmptyArray",
+                        "args": [ "@value" ]
+                    }],
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "entered": {
+                                "sentAs": "Order Entered",
+                                "type": "object",
+                                "filters": [{
+                                    "method": "Matmar10\\CampBX\\Filter\\Response::marshalStringToDateTime",
+                                    "args": [ "@value", "America/New_York" ]
+                                }]
+                            },
+                            "expires": {
+                                "sentAs": "Order Expiry",
+                                "type": "object",
+                                "filters": [{
+                                    "method": "Matmar10\\CampBX\\Filter\\Response::marshalStringToDateTime",
+                                    "args": [ "@value", "America/New_York" ]
+                                }]
+                            },
+                            "type": {
+                                "sentAs": "Order Type",
+                                "type": "string"
+                            },
+                            "marginPercent": {
+                                "sentAs": "Margin Percent",
+                                "type": "boolean",
+                                "filters": [{
+                                    "method": "Matmar10\\CampBX\\Filter\\Response::marshalMarginPercent",
+                                    "args": [ "@value" ]
+                                }]
+                            },
+                            "quantity": {
+                                "sentAs": "Quantity",
+                                "type": "\\Matmar10\\Money\\Entity\\Money",
+                                "filters": [{
+                                    "method": "Matmar10\\CampBX\\Filter\\Response::asMoneyFromFloat",
+                                    "args": [ "@value", "BTC", 8, 8, "B⃦" ]
+                                }]
+                            },
+                            "price": {
+                                "sentAs": "Price",
+                                "type": "\\Matmar10\\Money\\Entity\\CurrencyPair",
+                                "filters": [{
+                                    "method": "Matmar10\\CampBX\\Filter\\Response::asCurrencyPairFromFloat",
+                                    "args": [ "@value", "BTC", 8, 8, "USD", 2, 2, "B⃦", "$" ]
+                                }]
+                            },
+                            "stopLoss": {
+                                "sentAs": "Stop-loss",
+                                "type": "boolean",
+                                "filters": [{
+                                    "method": "Matmar10\\CampBX\\Filter\\Response::parseBoolean",
+                                    "args": [ "@value"  ]
+                                }]
+                            },
+                            "fillType": {
+                                "sentAs": "Fill Type",
+                                "type": "string"
+                            },
+                            "darkPool": {
+                                "sentAs": "Dark Pool",
+                                "type": "boolean",
+                                "filters": [{
+                                    "method": "Matmar10\\CampBX\\Filter\\Response::parseBoolean",
+                                    "args": [ "@value"  ]
+                                }]
+                            },
+                            "orderId": {
+                                "sentAs": "Order ID",
+                                "type": "string"
+                            }
+                        }
+                    }
                 }
             }
         }
