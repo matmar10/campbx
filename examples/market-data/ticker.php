@@ -11,10 +11,7 @@ setlocale(LC_MONETARY, 'en_US');
 // from: http://php.net/manual/en/function.money-format.php
 $usdFormat = '%n';
 
-$client = CampBXClient::factory(array(
-    'username' => 'CHANGEME',
-    'password' => 'CHANGEME',
-));
+$client = CampBXClient::factory();
 
 $command = $client->getCommand('GetTicker');
 $response = $client->execute($command);

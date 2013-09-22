@@ -55,10 +55,6 @@
         "GetTicker": {
             "type": "object",
             "properties": {
-                "statusCode": {
-                    "location": "statusCode",
-                    "type": "integer"
-                },
                 "lastTrade": {
                     "location": "json",
                     "sentAs": "Last Trade",

@@ -12,10 +12,7 @@ setlocale(LC_MONETARY, 'en_US');
 $usdFormat = '%(#6n';
 $btcFormat = '%= ^-16#8.8i';
 
-$client = CampBXClient::factory(array(
-    'username' => 'CHANGEME',
-    'password' => 'CHANGEME',
-));
+$client = CampBXClient::factory();
 
 $command = $client->getCommand('GetMarketDepth');
 $response = $client->execute($command);
