@@ -20,4 +20,9 @@ class AuthenticatedCommand extends OperationCommand
             'pass' => $password,
         ));
     }
+
+    protected function process()
+    {
+        parent::process();
+    }
 }

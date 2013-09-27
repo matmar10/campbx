@@ -4,35 +4,112 @@
     "apiVersion": "1",
     "baseUrl": "https://campbx.com/api",
     "operations": {
-        "GetMarketDepth": {
+        "getMarketDepth": {
             "summary": "Provides information on the market depth of the current order book",
             "httpMethod": "GET",
-            "responseClass": "GetMarketDepth",
+            "responseClass": "getMarketDepth",
             "uri": "xdepth.php"
         },
-        "GetTicker": {
+        "getTicker": {
             "summary": "Provides a high-level summary of the current bid/ask along with the last trade posted",
             "httpMethod": "GET",
-            "responseClass": "GetTicker",
+            "responseClass": "getTicker",
             "uri": "xticker.php"
         },
-        "GetAccountBalances": {
+        "getAccountBalances": {
             "summary": "Obtain latest account balances of your account (requires username/password and API access enabled)",
             "httpMethod": "POST",
             "uri": "myfunds.php",
-            "responseClass": "GetAccountBalances",
+            "responseClass": "getAccountBalances",
             "class": "Matmar10\\CampBX\\Command\\AuthenticatedCommand"
         },
-        "GetOrdersList": {
+        "getOrdersList": {
             "summary": "Get your list of open orders",
             "httpMethod": "POST",
             "uri": "myorders.php",
-            "responseClass": "GetOrdersList",
+            "responseClass": "getOrdersList",
             "class": "Matmar10\\CampBX\\Command\\AuthenticatedCommand"
+        },
+        "generateDepositAddress": {
+            "summary": "Generate a Bitcoin receiving address",
+            "httpMethod": "POST",
+            "uri": "getbtcaddr.php",
+            "responseClass": "generateDepositAddress",
+            "class": "Matmar10\\CampBX\\Command\\AuthenticatedCommand"
+        },
+        "sendBitcoin": {
+            "summary": "Sends Bitcoin to the specified receiving wallet address",
+            "httpMethod": "POST",
+            "uri": "sendbtc.php",
+            "responseClass": "sendBitcoin",
+            "class": "Matmar10\\CampBX\\Command\\AuthenticatedCommand",
+            "parameters": {
+                "walletAddress": {
+                    "type": "string",
+                    "description": "The Bitcoin network public wallet receiving address to send the bitcoins to",
+                    "required": true,
+                    "location": "postField",
+                    "sentAs": "BTCTo"
+                },
+                "amount": {
+                    "type": ["number", "Matmar10\\Money\\Entity\\Money"],
+                    "description": "The amount of bitcoins to send",
+                    "required": true,
+                    "location": "postField",
+                    "sentAs": "BTCAmt",
+                    "filters": [{
+                        "method": "Matmar10\\CampBX\\Filter\\Request::convertMoneyToFloat",
+                        "args": [ "@value" ]
+                    }]
+                }
+            }
+        },
+        "placeTradeOrder": {
+            "summary": "Place a trade order",
+            "httpMethod": "POST",
+            "uri": "tradeenter.php",
+            "responseClass": "placeTradeOrder",
+            "class": "Matmar10\\CampBX\\Command\\AuthenticatedCommand",
+            "parameters": {
+                "type": {
+                    "type": "string",
+                    "enum": ["ASK", "BID"],
+                    "description": "Type of order (bid or ask)",
+                    "required": true,
+                    "location": "postField",
+                    "sentAs": "TradeMode",
+                    "filters": [{
+                        "method": "Matmar10\\CampBX\\Filter\\Request::convertTradeOrderType",
+                        "args": [ "@value" ]
+                    }]
+                },
+                "amount": {
+                    "type": ["number", "Matmar10\\Money\\Entity\\Money"],
+                    "description": "The amount of the order in Bitcoin",
+                    "required": true,
+                    "location": "postField",
+                    "sentAs": "Quantity",
+                    "filters": [{
+                        "method": "Matmar10\\CampBX\\Filter\\Request::convertTradeOrderAmountToQuantity",
+                        "args": [ "@value" ]
+                    }]
+                },
+                "price": {
+                    "type": ["number", "Matmar10\\Money\\Entity\\Money"],
+                    "description": "The amount of the order in USD",
+                    "required": true,
+                    "location": "postField",
+                    "sentAs": "Price",
+                    "filters": [{
+                        "method": "Matmar10\\CampBX\\Filter\\Request::convertTradeOrderPrice",
+                        "args": [ "@value" ]
+                    }]
+                }
+            }
         }
     },
     "models": {
-        "GetMarketDepth": {
+        "getMarketDepth": {
             "type": "object",
             "properties": {
                 "statusCode": {
@@ -59,7 +136,7 @@
                 }
             }
         },
-        "GetTicker": {
+        "getTicker": {
             "type": "object",
             "properties": {
                 "lastTrade": {
@@ -91,7 +168,7 @@
                 }
             }
         },
-        "GetAccountBalances": {
+        "getAccountBalances": {
             "type": "object",
             "properties": {
                 "totalUSD": {
@@ -150,7 +227,7 @@
                 }
             }
         },
-        "GetOrdersList": {
+        "getOrdersList": {
             "type": "object",
             "properties": {
                 "bid": {
@@ -322,6 +399,40 @@
                             }
                         }
                     }
+                }
+            }
+        },
+        "generateDepositAddress": {
+            "type": "object",
+            "properties": {
+                "walletAddress": {
+                    "location": "json",
+                    "sentAs": "Success",
+                    "type": "string"
+                },
+                "expires": {
+                    "location": "json",
+                    "sentAs": "Expiry",
+                    "filters": [{
+                        "method": "Matmar10\\CampBX\\Filter\\Response::convertSecondsToDateTime",
+                        "args": [ "@value" ]
+                    }]
+                }
+            }
+        },
+        "sendBitcoin": {
+            "type": "object",
+            "properties": {
+
+            }
+        },
+        "placeTradeOrder": {
+            "type": "object",
+            "properties": {
+                "tradeOrderId": {
+                    "location": "json",
+                    "sentAs": "Success",
+                    "type": "string"
                 }
             }
         }

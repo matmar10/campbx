@@ -17,12 +17,11 @@ $client = CampBXAuthClient::factory(array(
     'password' => 'changeme',
 ));
 
-$command = $client->getCommand('GetAccountBalances');
-$response = $client->execute($command);
+$command = $client->getCommand('getAccountBalances');
+$result = $client->execute($command);
 
-echo "\n";
 echo "Account balances: \n";
 echo "----------------------------\n";
-echo "Total BTC: " . money_format($btcFormat, $response->get('totalBTC')->getAmountFloat()) . "\n";
-echo "Total USD: " . money_format($usdFormat, $response->get('totalUSD')->getAmountFloat()) . "\n";
+echo "Total BTC: " . money_format($btcFormat, $result->get('totalBTC')->getAmountFloat()) . "\n";
+echo "Total USD: " . money_format($usdFormat, $result->get('totalUSD')->getAmountFloat()) . "\n";
 echo "\n";

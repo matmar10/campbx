@@ -42,6 +42,11 @@ class ResourceProxy
         $this->data[$name] = $value;
     }
 
+    public function get($name)
+    {
+        return $this->__get($name);
+    }
+
     public function __get($name)
     {
         $this->assertValidKey($name);

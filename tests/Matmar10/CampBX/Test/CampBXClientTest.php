@@ -25,7 +25,7 @@ class CampBXClientTest extends GuzzleTestCase
     public function testGetMarketDepth($response)
     {
         $this->plugin->addResponse($response);
-        $command = $this->client->getCommand('GetMarketDepth');
+        $command = $this->client->getCommand('getMarketDepth');
         $result = $this->client->execute($command);
 
         $asks = $result->get('ask');
@@ -58,7 +58,7 @@ class CampBXClientTest extends GuzzleTestCase
     public function testGetTicker($response)
     {
         $this->plugin->addResponse($response);
-        $command = $this->client->getCommand('GetTicker');
+        $command = $this->client->getCommand('getTicker');
         $result = $this->client->execute($command);
 
         $lastTrade = $result->get('lastTrade');

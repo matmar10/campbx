@@ -2,6 +2,7 @@
 
 namespace Matmar10\CampBX\Filter;
 
+use DateInterval;
 use DateTime;
 use DateTimeZone;
 use Matmar10\Campbx\Resource\MarketDepthPrice;
@@ -91,5 +92,12 @@ class Response
             }
         }
         return $input;
+    }
+
+    public static function convertSecondsToDateTime($secondsFromNow)
+    {
+        $date = new DateTime('now', new DateTimeZone('GMT'));
+        $date->add(DateInterval::createFromDateString('+ ' . $secondsFromNow . ' seconds'));
+        return $date;
     }
 }
