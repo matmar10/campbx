@@ -115,24 +115,26 @@
             "uri": "tradecancel.php",
             "responseClass": "cancelTradeOrder",
             "class": "Matmar10\\CampBX\\Command\\AuthenticatedCommand",
-            "type": {
-                "type": "string",
-                "enum": ["ASK", "BID"],
-                "description": "Type of order (bid or ask)",
-                "required": true,
-                "location": "postField",
-                "sentAs": "Type",
-                "filters": [{
-                    "method": "Matmar10\\CampBX\\Filter\\Request::convertTradeOrderType",
-                    "args": [ "@value" ]
-                }]
-            },
-            "id": {
-                "type": "string",
-                "description": "The order ID",
-                "required": true,
-                "location": "postField",
-                "sentAs": "OrderID"
+            "parameters": {
+                "type": {
+                    "type": "string",
+                    "enum": ["ASK", "BID"],
+                    "description": "Type of order (bid or ask)",
+                    "required": true,
+                    "location": "postField",
+                    "sentAs": "Type",
+                    "filters": [{
+                        "method": "Matmar10\\CampBX\\Filter\\Request::convertTradeOrderType",
+                        "args": [ "@value" ]
+                    }]
+                },
+                "id": {
+                    "type": "number",
+                    "description": "The order ID",
+                    "required": true,
+                    "location": "postField",
+                    "sentAs": "OrderID"
+                }
             }
         }
     },
