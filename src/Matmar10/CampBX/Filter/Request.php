@@ -20,14 +20,17 @@ class Request
         return $input->getAmountFloat();
     }
 
-    public static function convertTradeOrderType($input)
+    public static function convertTradeOrderType($input, $isQuickBuyOrSell = false)
     {
+
+        $prefix = ($isQuickBuyOrSell) ? 'Quick' : '';
+
         if('BID' === $input) {
-            return 'QuickBuy';
+            return $prefix . 'Buy';
         }
 
         if('ASK' === $input) {
-            return 'QuickSell';
+            return $prefix . 'Sell';
         }
 
         throw new RuntimeException(sprintf("Invalid trade order type '%s' specified", $input));

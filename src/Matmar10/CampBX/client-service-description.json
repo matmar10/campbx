@@ -80,7 +80,7 @@
                     "sentAs": "TradeMode",
                     "filters": [{
                         "method": "Matmar10\\CampBX\\Filter\\Request::convertTradeOrderType",
-                        "args": [ "@value" ]
+                        "args": [ "@value", true ]
                     }]
                 },
                 "amount": {
