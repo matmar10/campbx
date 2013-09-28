@@ -121,7 +121,7 @@
                 "description": "Type of order (bid or ask)",
                 "required": true,
                 "location": "postField",
-                "sentAs": "TradeMode",
+                "sentAs": "Type",
                 "filters": [{
                     "method": "Matmar10\\CampBX\\Filter\\Request::convertTradeOrderType",
                     "args": [ "@value" ]
