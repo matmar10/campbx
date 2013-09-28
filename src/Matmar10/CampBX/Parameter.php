@@ -45,4 +45,7 @@ class Parameter
 
     const MARGIN_PERCENT_ZERO = 'None';
 
+    const TICKER_TYPE_ASK = 'ask';
+    const TICKER_TYPE_BID = 'bid';
+
 }
