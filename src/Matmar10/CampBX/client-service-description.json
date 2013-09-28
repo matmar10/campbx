@@ -132,7 +132,7 @@
                 "description": "The order ID",
                 "required": true,
                 "location": "postField",
-                "sentAs": "TradeMode"
+                "sentAs": "OrderID"
             }
         }
     },
