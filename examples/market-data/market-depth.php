@@ -14,7 +14,7 @@ $btcFormat = '%= ^-16#8.8i';
 
 $client = CampBXClient::factory();
 
-$command = $client->getCommand('GetMarketDepth');
+$command = $client->getCommand('getMarketDepth');
 $response = $client->execute($command);
 
 echo "\n\n";

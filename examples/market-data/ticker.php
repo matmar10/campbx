@@ -13,7 +13,7 @@ $usdFormat = '%n';
 
 $client = CampBXClient::factory();
 
-$command = $client->getCommand('GetTicker');
+$command = $client->getCommand('getTicker');
 $response = $client->execute($command);
 
 echo "\n";
