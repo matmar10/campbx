@@ -80,7 +80,7 @@
                     "sentAs": "TradeMode",
                     "filters": [{
                         "method": "Matmar10\\CampBX\\Filter\\Request::convertTradeOrderType",
-                        "args": [ "@value", true ]
+                        "args": [ "@value", "QUICK" ]
                     }]
                 },
                 "amount": {
@@ -134,6 +134,75 @@
                     "required": true,
                     "location": "postField",
                     "sentAs": "OrderID"
+                }
+            }
+        },
+        "placeAdvancedTradeOrder": {
+            "summary": "Place an advanced trade order",
+            "httpMethod": "POST",
+            "uri": "tradeadv.php",
+            "responseClass": "placeAdvancedTradeOrder",
+            "class": "Matmar10\\CampBX\\Command\\AuthenticatedCommand",
+            "parameters": {
+                "type": {
+                    "type": "string",
+                    "enum": ["ASK", "BID"],
+                    "description": "Type of order (bid or ask)",
+                    "required": true,
+                    "location": "postField",
+                    "sentAs": "TradeMode",
+                    "filters": [{
+                        "method": "Matmar10\\CampBX\\Filter\\Request::convertTradeOrderType",
+                        "args": [ "@value", "ADVANCED" ]
+                    }]
+                },
+                "amount": {
+                    "type": ["number", "object"],
+                    "instanceOf": "Matmar10\\Money\\Entity\\Money",
+                    "description": "The amount of the order in Bitcoin",
+                    "required": true,
+                    "location": "postField",
+                    "sentAs": "Quantity",
+                    "filters": [{
+                        "method": "Matmar10\\CampBX\\Filter\\Request::convertTradeOrderAmountToQuantity",
+                        "args": [ "@value" ]
+                    }]
+                },
+                "price": {
+                    "type": ["number", "object", "string"],
+                    "enum": ["Market"],
+                    "instanceOf": "Matmar10\\Money\\Entity\\Money",
+                    "description": "The amount of the order in USD",
+                    "required": true,
+                    "location": "postField",
+                    "sentAs": "Price",
+                    "filters": [{
+                        "method": "Matmar10\\CampBX\\Filter\\Request::convertTradeOrderPrice",
+                        "args": [ "@value" ]
+                    }]
+                },
+                "fillType": {
+                    "type": "string",
+                    "enum": ["INCREMENTAL", "ALL_OR_NOTHING", "FILL_OR_KILL", "Incremental", "AON", "FOK"],
+                    "description": "The way the order should be filled ('INCREMENTAL', 'ALL_OR_NOTHING', or 'FILL_OR_KILL')",
+                    "required": false,
+                    "location": "postField",
+                    "sentAs": "FillType",
+                    "filters": [{
+                        "method": "Matmar10\\CampBX\\Filter\\Request::convertTradeOrderFillType",
+                        "args": [ "@value" ]
+                    }]
+                },
+                "darkPool": {
+                    "type": "boolean",
+                    "description": "Whether the order should be submitted as a dark pool order",
+                    "required": false,
+                    "location": "postField",
+                    "sentAs": "DarkPool",
+                    "filters": [{
+                        "method": "Matmar10\\CampBX\\Filter\\Request::convertBoolean",
+                        "args": [ "@value" ]
+                    }]
                 }
             }
         }
@@ -270,12 +339,10 @@
                     }],
                     "items": {
                         "type": "object",
-                        "filters": [
-                            {
-                                "method": "Matmar10\\CampBX\\Filter\\Response::marshalResourceProxy",
-                                "args": [ "@value" ]
-                            }
-                        ],
+                        "filters": [{
+                            "method": "Matmar10\\CampBX\\Filter\\Response::marshalResourceProxy",
+                            "args": [ "@value" ]
+                        }],
                         "properties": {
                             "entered": {
                                 "sentAs": "Order Entered",
@@ -358,6 +425,10 @@
                     }],
                     "items": {
                         "type": "object",
+                        "filters": [{
+                            "method": "Matmar10\\CampBX\\Filter\\Response::marshalResourceProxy",
+                            "args": [ "@value" ]
+                        }],
                         "properties": {
                             "entered": {
                                 "sentAs": "Order Entered",
@@ -472,6 +543,21 @@
                 "message": {
                     "location": "json",
                     "sentAs": "Success",
+                    "type": "string"
+                }
+            }
+        },
+        "placeAdvancedTradeOrder": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "location": "json",
+                    "sentAs": "Success",
+                    "type": "string"
+                },
+                "info": {
+                    "location": "json",
+                    "sentAs": "Info",
                     "type": "string"
                 }
             }

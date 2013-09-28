@@ -25,4 +25,4 @@ $client = CampBXAuthClient::factory($config);
 
 $command = $client->getCommand('getOrders');
 $result = $client->execute($command);
-print_r($result);
+

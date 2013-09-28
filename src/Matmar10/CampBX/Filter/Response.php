@@ -5,6 +5,7 @@ namespace Matmar10\CampBX\Filter;
 use DateInterval;
 use DateTime;
 use DateTimeZone;
+use Matmar10\Campbx\Parameter;
 use Matmar10\Campbx\Resource\MarketDepthPrice;
 use Matmar10\Campbx\Resource\ResourceProxy;
 use Matmar10\Money\Entity\Currency;
@@ -63,7 +64,7 @@ class Response
 
     public static function marshalMarginPercent($input)
     {
-        if('None' === $input) {
+        if(Parameter::MARGIN_PERCENT_ZERO === $input) {
             return 0;
         }
 
@@ -72,10 +73,7 @@ class Response
 
     public static function parseBoolean($input)
     {
-        if('No' === $input) {
-            return false;
-        }
-        return true;
+        return Parameter::$booleans[$input];
     }
 
     public static function marshalResourceProxy($input)
@@ -87,7 +85,7 @@ class Response
     {
         if(1 === count($input)) {
             $firstElement = reset($input);
-            if(false !== array_key_exists('Info', $firstElement)) {
+            if(false !== array_search('Info', $firstElement->getValidKeys())) {
                 return array();
             }
         }
