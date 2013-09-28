@@ -3,4 +3,5 @@
 vendor
 test.php
 composer.lock
+examples-config.json
 

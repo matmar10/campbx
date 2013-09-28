@@ -23,11 +23,11 @@
             "responseClass": "getAccountBalances",
             "class": "Matmar10\\CampBX\\Command\\AuthenticatedCommand"
         },
-        "getOrdersList": {
+        "getOrders": {
             "summary": "Get your list of open orders",
             "httpMethod": "POST",
             "uri": "myorders.php",
-            "responseClass": "getOrdersList",
+            "responseClass": "getOrders",
             "class": "Matmar10\\CampBX\\Command\\AuthenticatedCommand"
         },
         "generateDepositAddress": {
@@ -52,7 +52,7 @@
                     "sentAs": "BTCTo"
                 },
                 "amount": {
-                    "type": ["number", "Matmar10\\Money\\Entity\\Money"],
+                    "type": ["number", "\\Matmar10\\Money\\Entity\\Money"],
                     "description": "The amount of bitcoins to send",
                     "required": true,
                     "location": "postField",
@@ -84,7 +84,8 @@
                     }]
                 },
                 "amount": {
-                    "type": ["number", "Matmar10\\Money\\Entity\\Money"],
+                    "type": ["number", "object"],
+                    "instanceOf": "Matmar10\\Money\\Entity\\Money",
                     "description": "The amount of the order in Bitcoin",
                     "required": true,
                     "location": "postField",
@@ -95,7 +96,8 @@
                     }]
                 },
                 "price": {
-                    "type": ["number", "Matmar10\\Money\\Entity\\Money"],
+                    "type": ["number", "object"],
+                    "instanceOf": "Matmar10\\Money\\Entity\\Money",
                     "description": "The amount of the order in USD",
                     "required": true,
                     "location": "postField",
@@ -105,6 +107,32 @@
                         "args": [ "@value" ]
                     }]
                 }
+            }
+        },
+        "cancelTradeOrder": {
+            "summary": "Cancel a trade order",
+            "httpMethod": "POST",
+            "uri": "tradecancel.php",
+            "responseClass": "cancelTradeOrder",
+            "class": "Matmar10\\CampBX\\Command\\AuthenticatedCommand",
+            "type": {
+                "type": "string",
+                "enum": ["ASK", "BID"],
+                "description": "Type of order (bid or ask)",
+                "required": true,
+                "location": "postField",
+                "sentAs": "TradeMode",
+                "filters": [{
+                    "method": "Matmar10\\CampBX\\Filter\\Request::convertTradeOrderType",
+                    "args": [ "@value" ]
+                }]
+            },
+            "id": {
+                "type": "string",
+                "description": "The order ID",
+                "required": true,
+                "location": "postField",
+                "sentAs": "TradeMode"
             }
         }
     },
@@ -227,7 +255,7 @@
                 }
             }
         },
-        "getOrdersList": {
+        "getOrders": {
             "type": "object",
             "properties": {
                 "bid": {
@@ -311,7 +339,7 @@
                                     "args": [ "@value"  ]
                                 }]
                             },
-                            "orderId": {
+                            "id": {
                                 "sentAs": "Order ID",
                                 "type": "string"
                             }
@@ -393,7 +421,7 @@
                                     "args": [ "@value"  ]
                                 }]
                             },
-                            "orderId": {
+                            "id": {
                                 "sentAs": "Order ID",
                                 "type": "string"
                             }
@@ -429,7 +457,17 @@
         "placeTradeOrder": {
             "type": "object",
             "properties": {
-                "tradeOrderId": {
+                "id": {
+                    "location": "json",
+                    "sentAs": "Success",
+                    "type": "string"
+                }
+            }
+        },
+        "cancelTradeOrder": {
+            "type": "object",
+            "properties": {
+                "message": {
                     "location": "json",
                     "sentAs": "Success",
                     "type": "string"

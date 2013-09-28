@@ -23,11 +23,6 @@ $client = CampBXAuthClient::factory($config);
  * ));
  */
 
-$command = $client->getCommand('getAccountBalances');
+$command = $client->getCommand('getOrders');
 $result = $client->execute($command);
-
-echo "Account balances: \n";
-echo "----------------------------\n";
-echo "Total BTC: " . money_format($btcFormat, $result->get('totalBTC')->getAmountFloat()) . "\n";
-echo "Total USD: " . money_format($usdFormat, $result->get('totalUSD')->getAmountFloat()) . "\n";
-echo "\n";
+print_r($result);

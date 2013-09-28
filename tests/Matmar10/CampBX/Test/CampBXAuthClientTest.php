@@ -59,7 +59,7 @@ class CampBXAuthClientTest extends GuzzleTestCase
     public function testGetOrdersList($response, $instanceTypes, $internalTypes, $countBid, $countSell)
     {
         $this->plugin->addResponse($response);
-        $command = $this->client->getCommand('getOrdersList');
+        $command = $this->client->getCommand('getOrders');
         $result = $this->client->execute($command);
 
         $buyOrders = $result->get('bid');
@@ -109,7 +109,7 @@ class CampBXAuthClientTest extends GuzzleTestCase
             'stopLoss' => 'bool',
             'fillType' => 'string',
             'darkPool' => 'bool',
-            'orderId' => 'string',
+            'id' => 'string',
         );
         return array(
             array(
@@ -123,9 +123,9 @@ class CampBXAuthClientTest extends GuzzleTestCase
     }
 
     /**
-     * @dataProvider provideTestGenerateWalletAddressData
+     * @dataProvider provideTestGenerateDepositAddressData
      */
-    public function testGenerateWalletAddress($response, $expectedWalletAddress, $expectedDateTime)
+    public function testGenerateDepositAddress($response, $expectedWalletAddress, $expectedDateTime)
     {
         $this->plugin->addResponse($response);
         $command = $this->client->getCommand('generateDepositAddress');
@@ -135,7 +135,7 @@ class CampBXAuthClientTest extends GuzzleTestCase
 
     }
 
-    public function provideTestGenerateWalletAddressData()
+    public function provideTestGenerateDepositAddressData()
     {
         return array(
             array(
@@ -143,6 +143,22 @@ class CampBXAuthClientTest extends GuzzleTestCase
                 '1Dtdcx5iWc3PEYmdKtfLg3jLYXUZGdJVHy',
                 1473298,
             ),
+        );
+    }
+
+    /**
+     * @dataProvider provideTestSendBitcoin
+     */
+    public function testSendBitcoin()
+    {
+        // $this->assertEquals(true, true);
+        $this->markTestIncomplete('TODO: Add test for send bitcoin');
+    }
+
+    public function provideTestSendBitcoin()
+    {
+        return array(
+            array(),
         );
     }
 
@@ -167,18 +183,43 @@ class CampBXAuthClientTest extends GuzzleTestCase
         $command->set('price', $priceUsd);
 
         $result = $this->client->execute($command);
-        $this->assertEquals($expectedTradeOrderId, $result->get('tradeOrderId'));
+        $this->assertEquals($expectedTradeOrderId, $result->get('id'));
     }
 
     public function provideTestPlaceTradeOrderData()
     {
         return array(
             array(
-                'bid',
+                'BID',
                 0.01,
                 10,
                 new Response(200, null, '{"Success":"1581755"}'),
                 '1581755',
+            ),
+        );
+    }
+
+    /**
+     * @dataProvider provideTestCancelTradeOrderData
+     */
+    public function testCancelTradeOrder($type, $id, $response, $expectedMessage)
+    {
+        $this->plugin->addResponse($response);
+        $command = $this->client->getCommand('cancelTradeOrder');
+        $command->set('type', $type);
+        $command->set('id', $id);
+        $result = $this->client->execute($command);
+        $this->assertEquals($expectedMessage, $result->get('message'));
+    }
+
+    public function provideTestCancelTradeOrderData()
+    {
+        return array(
+            array(
+                'BID',
+                '1596285',
+                new Response(200, null, '{"Success":"Order ID 1596285 was deleted successfully."}'),
+                'Order ID 1596285 was deleted successfully.',
             ),
         );
     }
