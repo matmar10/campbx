@@ -9,7 +9,7 @@ use Matmar10\Campbx\Parameter;
 use Matmar10\Campbx\Resource\MarketDepthPrice;
 use Matmar10\Campbx\Resource\ResourceProxy;
 use Matmar10\Money\Entity\Currency;
-use Matmar10\Money\Entity\CurrencyPair;
+use Matmar10\Money\Entity\ExchangeRate;
 use Matmar10\Money\Entity\Money;
 
 class Response
@@ -39,7 +39,7 @@ class Response
         return $amount;
     }
 
-    public static function asCurrencyPairFromFloat(
+    public static function asExchangeRateFromFloat(
         $input,
         $fromCurrencyCode,
         $fromCurrencyCalculationPrecision,
@@ -53,7 +53,7 @@ class Response
     {
         $fromCurrency = new Currency($fromCurrencyCode, $fromCurrencyCalculationPrecision, $fromCurrencyDisplayPrecision, $fromCurrencySymbol);
         $toCurrency = new Currency($toCurrencyCode, $toCurrencyCalculationPrecision, $toCurrencyDisplayPrecision, $toCurrencySymbol);
-        $pair = new CurrencyPair($fromCurrency, $toCurrency, (float)$input);
+        $pair = new ExchangeRate($fromCurrency, $toCurrency, (float)$input);
         return $pair;
     }
 
@@ -73,7 +73,7 @@ class Response
 
     public static function parseBoolean($input)
     {
-        return Parameter::$booleans[$input];
+        return Parameter::$booleanResponses[$input];
     }
 
     public static function marshalResourceProxy($input)

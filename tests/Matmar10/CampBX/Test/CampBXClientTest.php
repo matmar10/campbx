@@ -2,6 +2,8 @@
 
 namespace Matmar10\Campbx\Test;
 
+use Matmar10\Money\Entity\Currency;
+use Matmar10\Money\Entity\Money;
 use Guzzle\Http\Message\Response;
 use Guzzle\Plugin\Mock\MockPlugin;
 use Guzzle\Tests\GuzzleTestCase;
@@ -31,16 +33,48 @@ class CampBXClientTest extends GuzzleTestCase
         $asks = $result->get('ask');
         $this->assertInternalType('array', $asks);
         $ask = reset($asks);
-        $this->assertInstanceOf('\\Matmar10\\CampBX\\Resource\\MarketDepthPrice', reset($asks));
-        $this->assertInstanceOf('\\Matmar10\\Money\\Entity\\Money', $ask->getPrice());
+        $this->assertInstanceOf('\\Matmar10\\CampBX\\Resource\\MarketDepthPrice', $ask);
+        $this->assertInstanceOf('\\Matmar10\\Money\\Entity\\Currency', $ask->getFromCurrency());
+        $this->assertInstanceOf('\\Matmar10\\Money\\Entity\\Currency', $ask->getToCurrency());
+        $this->assertInternalType('float', $ask->getMultiplier());
         $this->assertInstanceOf('\\Matmar10\\Money\\Entity\\Money', $ask->getAmount());
+
+        // test scenario when you want to buy $1234.56 USD worth of BTC
+        $baseCurrency = new Currency('USD', 2, 2, '$');
+        $desiredAmountAsUsd = new Money($baseCurrency);
+        $desiredAmountAsUsd->setAmountFloat(1234.56);
+        $tradeCurrency = new Currency('BTC', 8, 8, 'B⃦');
+        $expectedAmountAsBtc = new Money($tradeCurrency);
+        $expectedAmountAsBtc->setAmountFloat(4.93);
+
+        $calculatedAmountAsBtc = $ask->convert($desiredAmountAsUsd);
+        $this->assertInstanceOf('\\Matmar10\\Money\\Entity\\Money', $calculatedAmountAsBtc);
+        $this->assertEquals($expectedAmountAsBtc, $calculatedAmountAsBtc);
 
         $bids = $result->get('bid');
         $this->assertInternalType('array', $bids);
         $bid = reset($bids);
-        $this->assertInstanceOf('\\Matmar10\\CampBX\\Resource\\MarketDepthPrice', reset($bids));
-        $this->assertInstanceOf('\\Matmar10\\Money\\Entity\\Money', $bid->getPrice());
+        $this->assertInstanceOf('\\Matmar10\\CampBX\\Resource\\MarketDepthPrice', $bid);
+        $this->assertInstanceOf('\\Matmar10\\Money\\Entity\\Currency', $bid->getFromCurrency());
+        $this->assertInstanceOf('\\Matmar10\\Money\\Entity\\Currency', $bid->getToCurrency());
+        $this->assertInternalType('float', $bid->getMultiplier());
         $this->assertInstanceOf('\\Matmar10\\Money\\Entity\\Money', $bid->getAmount());
+
+
+        // test scenario when you want to buy $1234.56 USD worth of BTC
+        $tradeCurrency = new Currency('BTC', 8, 8, 'B⃦');
+        $baseCurrency = new Currency('USD', 2, 2, '$');
+
+        $desiredSellAmountAsBtc = new Money($tradeCurrency);
+        $desiredSellAmountAsBtc->setAmountFloat(1234.56);
+
+        $expectedAmountAsUsd = new Money($baseCurrency);
+        $expectedAmountAsUsd->setAmountFloat(302467.20);
+
+        $calculatedAmountAsUsd = $bid->convert($desiredSellAmountAsBtc);
+        $this->assertInstanceOf('\\Matmar10\\Money\\Entity\\Money', $calculatedAmountAsBtc);
+        $this->assertEquals($expectedAmountAsUsd, $calculatedAmountAsUsd);
+
     }
 
     public function provideTestGetMarketDepth()
@@ -62,13 +96,13 @@ class CampBXClientTest extends GuzzleTestCase
         $result = $this->client->execute($command);
 
         $lastTrade = $result->get('lastTrade');
-        $this->assertInstanceOf('\\Matmar10\\Money\\Entity\\CurrencyPair', $lastTrade);
+        $this->assertInstanceOf('\\Matmar10\\Money\\Entity\\ExchangeRate', $lastTrade);
 
         $bid = $result->get('bid');
-        $this->assertInstanceOf('\\Matmar10\\Money\\Entity\\CurrencyPair', $bid);
+        $this->assertInstanceOf('\\Matmar10\\Money\\Entity\\ExchangeRate', $bid);
 
         $ask = $result->get('ask');
-        $this->assertInstanceOf('\\Matmar10\\Money\\Entity\\CurrencyPair', $ask);
+        $this->assertInstanceOf('\\Matmar10\\Money\\Entity\\ExchangeRate', $ask);
 
     }
 

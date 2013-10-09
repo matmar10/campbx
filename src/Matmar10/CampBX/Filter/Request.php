@@ -10,7 +10,6 @@ use Matmar10\CampBX\Parameter;
 use Matmar10\Campbx\Resource\MarketDepthPrice;
 use Matmar10\Campbx\Resource\ResourceProxy;
 use Matmar10\Money\Entity\Currency;
-use Matmar10\Money\Entity\CurrencyPair;
 use Matmar10\Money\Entity\Money;
 use RuntimeException;
 

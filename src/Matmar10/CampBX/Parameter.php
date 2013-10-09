@@ -10,6 +10,13 @@ class Parameter
         false => 'No',
     );
 
+    static $booleanResponses = array(
+        'Yes' => true,
+        'No' => false,
+        0 => false,
+        1 => true,
+    );
+
     const QUICK_TRADE_ORDER = 'QUICK';
     const ADVANCED_TRADE_ORDER = 'ADVANCED';
 
