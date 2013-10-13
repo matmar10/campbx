@@ -9,7 +9,7 @@
     ],
     "require": {
         "guzzle/guzzle": "~3.7",
-        "matmar10/lib-money": "dev-exchange-rate-entity-name"
+        "matmar10/lib-money": "1.0.0"
     },
     "license": "Apache License Version 2.0",
     "authors": [
