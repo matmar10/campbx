@@ -220,7 +220,22 @@
                     "sentAs": "Bids",
                     "filters": [{
                         "method": "Matmar10\\CampBX\\Filter\\Response::convertMarketDepth",
-                        "args": [ "@value" ]
+                        "args": [
+                            "@value",
+                            "BTC",
+                            8,
+                            8,
+                            "B⃦",
+                            "USD",
+                            2,
+                            2,
+                            "$",
+                            "BID",
+                            "BTC",
+                            8,
+                            8,
+                            "B⃦"
+                        ]
                     }]
                 },
                 "ask": {
@@ -229,7 +244,22 @@
                     "filters": [
                         {
                             "method": "Matmar10\\CampBX\\Filter\\Response::convertMarketDepth",
-                            "args": [ "@value" ]
+                            "args": [
+                                "@value",
+                                "BTC",
+                                8,
+                                8,
+                                "B⃦",
+                                "USD",
+                                2,
+                                2,
+                                "$",
+                                "ASK",
+                                "BTC",
+                                8,
+                                8,
+                                "B⃦"
+                            ]
                         }
                     ]
                 }

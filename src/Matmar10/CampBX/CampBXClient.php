@@ -24,7 +24,7 @@ class CampBXClient extends Client
         $client = new self($config->get('base_url'), $config);
 
         // use description file to configure the client
-        $servicesDescriptionFilename = dirname(__FILE__) . '/client-service-description.json';
+        $servicesDescriptionFilename = dirname(__FILE__) . '/service-description.json';
         $description = ServiceDescription::factory($servicesDescriptionFilename);
         $client->setDescription($description);
 

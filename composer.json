@@ -5,11 +5,16 @@
         {
             "type": "vcs",
             "url": "https://github.com/matmar10/lib-money"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/matmar10/lib-currency-exchange"
         }
     ],
     "require": {
         "guzzle/guzzle": "~3.7",
-        "matmar10/lib-money": "1.0.0"
+        "matmar10/lib-money": "1.0.0",
+        "matmar10/lib-currency-exchange": "dev-master"
     },
     "license": "Apache License Version 2.0",
     "authors": [

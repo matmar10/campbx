@@ -6,23 +6,47 @@ use DateInterval;
 use DateTime;
 use DateTimeZone;
 use Matmar10\Campbx\Parameter;
-use Matmar10\Campbx\Resource\MarketDepthPrice;
 use Matmar10\Campbx\Resource\ResourceProxy;
+use Matmar10\Money\CurrencyExchange\Entity\MarketDepthPrice;
+use Matmar10\Money\CurrencyExchange\Entity\MarketDepthCollection;
 use Matmar10\Money\Entity\Currency;
+use Matmar10\Money\Entity\CurrencyPair;
 use Matmar10\Money\Entity\ExchangeRate;
 use Matmar10\Money\Entity\Money;
 
 class Response
 {
-    public static function convertMarketDepth($input)
+    // CurrencyInterface $fromCurrency = null, CurrencyInterface $toCurrency = null, $rate = null, $type = null, MoneyInterface $depth = null
+    public static function convertMarketDepth(
+        $input,
+        $fromCurrencyCode,
+        $fromCurrencyPrecision,
+        $fromCurrencyDisplayPrecision,
+        $fromCurrencySymbol,
+        $toCurrencyCode,
+        $toCurrencyPrecision,
+        $toCurrencyDisplayPrecision,
+        $toCurrencySymbol,
+        $type,
+        $depthCurrency,
+        $depthCurrencyPrecision,
+        $depthCurrencyDisplayPrecision,
+        $depthCurrencySymbol
+    )
     {
-        $marketDepth = array();
+        $fromCurrency = new Currency($fromCurrencyCode, $fromCurrencyPrecision, $fromCurrencyDisplayPrecision, $fromCurrencySymbol);
+        $toCurrency = new Currency($toCurrencyCode, $toCurrencyPrecision, $toCurrencyDisplayPrecision, $toCurrencySymbol);
+        $currencyPair = new CurrencyPair($fromCurrency, $toCurrency);
+        $amountCurrency = new Currency($depthCurrency, $depthCurrencyPrecision, $depthCurrencyDisplayPrecision, $depthCurrencySymbol);
+        $marketDepthCollection = new MarketDepthCollection($currencyPair);
         foreach($input as $depthData) {
-            list($price, $ordersValue) = $depthData;
-            $marketDepthPrice = new MarketDepthPrice((float)$price, (float)$ordersValue);
-            array_push($marketDepth, $marketDepthPrice);
+            list($rate, $ordersValue) = $depthData;
+            $ordersAmount = new Money($amountCurrency);
+            $ordersAmount->setAmountFloat($ordersValue);
+            $marketDepthPrice = new MarketDepthPrice($fromCurrency, $toCurrency, $rate, $type, $ordersAmount);
+            $marketDepthCollection->add($marketDepthPrice);
         }
-        return $marketDepth;
+        return $marketDepthCollection;
     }
 
     public static function asMoneyFromFloat(
@@ -33,7 +57,7 @@ class Response
         $symbol
     )
     {
-        $currency =  new Currency($currencyCode, $calculationPrecision, $displayPrecision, $symbol);
+        $currency = new Currency($currencyCode, $calculationPrecision, $displayPrecision, $symbol);
         $amount = new Money($currency);
         $amount->setAmountFloat($input);
         return $amount;
