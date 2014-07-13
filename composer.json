@@ -1,16 +1,8 @@
 {
     "name": "matmar10/campbx",
     "description": "REST API Client for CampBX Bitcoin exchange using Guzzle library",
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/matmar10/lib-money"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/matmar10/lib-currency-exchange"
-        }
-    ],
+    "repositories": [],
+    "version": "0.0.2",
     "require": {
         "guzzle/guzzle": "~3.7",
         "matmar10/lib-money": "dev-master",
