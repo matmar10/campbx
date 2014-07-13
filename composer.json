@@ -5,8 +5,8 @@
     "version": "0.0.2",
     "require": {
         "guzzle/guzzle": "~3.7",
-        "matmar10/lib-money": "dev-master",
-        "matmar10/lib-currency-exchange": "dev-master"
+        "matmar10/lib-money": "~1.0.2",
+        "matmar10/lib-currency-exchange": "~1.0.1"
     },
     "license": "Apache License Version 2.0",
     "authors": [
